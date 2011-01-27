@@ -26,9 +26,9 @@ module Ankusa
 
     def get_vocabulary_sizes
       count = Hash.new 0
-      @freqs.each { |w, ks|
+      @freqs.each do |w, ks|
         ks.keys.each { |k| count[k] += 1 }
-      }
+      end
       count
     end
 
@@ -63,7 +63,5 @@ module Ankusa
 
     def close
     end
-
   end
-
 end

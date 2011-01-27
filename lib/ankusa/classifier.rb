@@ -1,5 +1,4 @@
 module Ankusa
-
   module Classifier
     attr_reader :classnames
 
@@ -13,12 +12,12 @@ module Ankusa
     # klass is a symbol
     def train(klass, text)
       th = TextHash.new(text)
-      th.each { |word, count|
-        @storage.incr_word_count klass, word, count
+      th.each do |word, count|
+        @storage.incr_word_count(klass, word, count)
         yield word, count if block_given?
-      }
-      @storage.incr_total_word_count klass, th.word_count
-      doccount = (text.kind_of? Array) ? text.length : 1
+      end
+      @storage.incr_total_word_count(klass, th.word_count)
+      doccount = (text.is_a? Array) ? text.length : 1
       @storage.incr_doc_count klass, doccount
       @classnames << klass if not @classnames.include? klass
       # cache is now dirty of these vars
