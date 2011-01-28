@@ -1,7 +1,6 @@
 require 'hbaserb'
 
 module Ankusa
-
   class HBaseStorage
     attr_reader :hbase
 
@@ -16,9 +15,7 @@ module Ankusa
 
     def classnames
       cs = []
-      summary_table.create_scanner("", "totals") { |row|
-        cs << row.row.intern
-      }
+      summary_table.create_scanner("", "totals"){|row| cs << row.row.intern }
       cs
     end
 
@@ -51,11 +48,11 @@ module Ankusa
       row = freq_table.get_row(word)
       return counts if row.length == 0
 
-      row.first.columns.each { |colname, cell|
+      row.first.columns.each do |colname, cell|
         classname = colname.split(':')[1].intern
         # in case untrain has been called too many times
         counts[classname] = [cell.to_i64.to_f, 0].max
-      }
+      end
 
       counts
     end
@@ -65,15 +62,15 @@ module Ankusa
     end
 
     def get_total_word_count(klass)
-      @klass_word_counts.fetch(klass) {
+      @klass_word_counts.fetch(klass) do
         @klass_word_counts[klass] = summary_table.get(klass, "totals:wordcount").first.to_i64.to_f
-      }
+      end
     end
     
     def get_doc_count(klass)
-      @klass_doc_counts.fetch(klass) {
+      @klass_doc_counts.fetch(klass) do
         @klass_doc_counts[klass] = summary_table.get(klass, "totals:doccount").first.to_i64.to_f
-      }
+      end
     end
 
     def incr_word_count(klass, word, count)
@@ -107,9 +104,9 @@ module Ankusa
     protected
     def get_summary(name)
       counts = Hash.new 0
-      summary_table.create_scanner("", name) { |row|
+      summary_table.create_scanner("", name) do |row|
         counts[row.row.intern] = row.columns[name].to_i64
-      }
+      end
       counts
     end
 
@@ -120,7 +117,5 @@ module Ankusa
     def freq_table
       @ftable ||= @hbase.get_table @ftablename
     end
-
   end
-
 end

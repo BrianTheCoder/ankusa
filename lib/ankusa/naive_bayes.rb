@@ -2,14 +2,14 @@ module Ankusa
   class NaiveBayesClassifier
     include Classifier
 
-    def classify(text, classes=nil)
+    def classify(text, classes = nil)
       # return the most probable class
-      log_likelihoods(text, classes).sort_by { |c| -c[1] }.first.first
+      log_likelihoods(text, classes).sort_by{|c| -c[1] }.first.first
     end
     
     # Classes is an array of classes to look at
-    def classifications(text, classnames=nil)
-      result = log_likelihoods text, classnames
+    def classifications(text, classnames = nil)
+      result = log_likelihoods(text, classnames)
       result.keys.each do |k|
         result[k] = Math.exp result[k] 
       end
@@ -21,13 +21,13 @@ module Ankusa
     end
 
     # Classes is an array of classes to look at
-    def log_likelihoods(text, classnames=nil)
+    def log_likelihoods(text, classnames = nil)
       classnames ||= @classnames
       result = Hash.new 0
 
       TextHash.new(text).each do |word, count|
         probs = get_word_probs(word, classnames)
-        classnames.each { |k| result[k] += (Math.log(probs[k]) * count) }
+        classnames.each{|k| result[k] += (Math.log(probs[k]) * count) }
       end
 
       # add the prior and exponentiate
@@ -36,7 +36,6 @@ module Ankusa
       classnames.each do |k| 
         result[k] += Math.log((@storage.get_doc_count(k) + 1).to_f / doc_count_total) 
       end
-      
       result
     end
   end

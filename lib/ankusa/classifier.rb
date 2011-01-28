@@ -30,12 +30,12 @@ module Ankusa
     # klass is a symbol
     def untrain(klass, text)
       th = TextHash.new(text)
-      th.each { |word, count|
+      th.each do |word, count|
         @storage.incr_word_count klass, word, -count
         yield word, count if block_given?
-      }
+      end
       @storage.incr_total_word_count klass, -th.word_count
-      doccount = (text.kind_of? Array) ? text.length : 1
+      doccount = (text.is_a? Array) ? text.length : 1
       @storage.incr_doc_count klass, -doccount
       # cache is now dirty of these vars
       @doc_count_totals = nil
@@ -44,14 +44,15 @@ module Ankusa
     end
 
     protected
+    
     def get_word_probs(word, classnames)
       probs = Hash.new 0
-      @storage.get_word_counts(word).each { |k,v| probs[k] = v if classnames.include? k }
+      @storage.get_word_counts(word).each{|k,v| probs[k] = v if classnames.include? k }
       vs = vocab_sizes
-      classnames.each { |cn| 
+      classnames.each do |cn| 
         # use a laplacian smoother
         probs[cn] = (probs[cn] + 1).to_f / (@storage.get_total_word_count(cn) + vs[cn]).to_f
-      }
+      end
       probs
     end
 
@@ -62,7 +63,5 @@ module Ankusa
     def vocab_sizes
       @vocab_sizes ||= @storage.get_vocabulary_sizes
     end
-
   end
-
 end
