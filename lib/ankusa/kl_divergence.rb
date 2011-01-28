@@ -1,5 +1,4 @@
 module Ankusa
-
   class KLDivergenceClassifier
     include Classifier
 
@@ -9,23 +8,20 @@ module Ankusa
       distances(text, classes).sort_by { |c| c[1] }.first.first
     end
     
-
     # Classes is an array of classes to look at
     def distances(text, classnames=nil)
       classnames ||= @classnames
       distances = Hash.new 0
 
       th = TextHash.new(text)
-      th.each { |word, count|
+      th.each do |word, count|
         thprob = count.to_f / th.length.to_f
         probs = get_word_probs(word, classnames)
-        classnames.each { |k| 
+        classnames.each do |k| 
           distances[k] += (thprob * Math.log(thprob / probs[k]) * count) 
-        }
-      }
-
+        end
+      end
       distances
     end
   end
-
 end

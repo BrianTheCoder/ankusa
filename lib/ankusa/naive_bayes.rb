@@ -15,7 +15,7 @@ module Ankusa
       end
 
       # normalize to get probs
-      sum = result.values.sum
+      sum = result.values.inject(0){|sum, count| sum += count }
       result.keys.each{|k| result[k] = result[k] / sum }
       result
     end

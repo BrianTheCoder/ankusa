@@ -6,11 +6,11 @@ Gem::Specification.new do |s|
   s.name        = "ankusa"
   s.version     = Ankusa::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["TODO: Write your name"]
-  s.email       = ["TODO: Write your email address"]
+  s.authors     = ["brianthecoder"]
+  s.email       = ["brianthecoder@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{classifier with multiple backends}
+  s.description = %q{classifier with multiple backends}
 
   s.rubyforge_project = "ankusa"
 
